@@ -1,0 +1,51 @@
+<!doctype>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/index.css"/>
+        <script src="js/jquery.js"></script>
+        <script src="../src/validator.js"></script>
+    </head>
+    <body>
+        <form novalidate>
+            <div class="field-group">
+                <label for="simple-text"><i class="red">*</i>简单文本：</label>
+                <input type="text" name="simple-text" id="text" required pattern="^[\d]+$" info="非空数字" empty="must not be empty" invalid="pattern not match"/>
+                <div class="field-msg"></div>
+            </div>
+            <div class="field-group">
+                <label for="password1"><i class="red">*</i>密码：</label>
+                <input type="password" name="password1" id="pwd1" info="6-12位字母数字符号" required pattern="^.{6,12}$" empty="1 must not be empty" invalid="pattern1 not match"/>
+                <div class="field-msg"></div>
+            </div>
+            <div class="field-group">
+                <label for="password2"><i class="red">*</i>确认密码：</label>
+                <input type="password" name="password2" id="pwd2" info="6-12位字母数字符号" required pattern="^.{6,12}$" empty="2 must not be empty" invalid="pattern2 not match" custom="same.pwd1" cmsg="not match with 1"/>
+                <div class="field-msg"></div>
+            </div>
+            <div class="field-group">
+                <label for="company-name"><i class="red">*</i>自定义验证：</label>
+                <input type="text" name="company-name" id="text" required pattern="^[\w]+$" info="非空字母数字下划线" empty="must not be empty" invalid="pattern not match" custom="repeat.name" cmsg="this name has already been used"/>
+                <div class="field-msg"></div>
+            </div>
+            <div class="field-group">
+                <div class="subfield">
+                    <label for="combo-1"><i class="red">*</i>组合1：</label>
+                    <input type="text" name="combo-1" id="text" required pattern="^[\d]+$" info="非空数字" empty="1 must not be empty" invalid="pattern1 not match"/>
+                </div>
+                -
+                <div class="subfield">
+                    <label for="combo-2"><i class="red">*</i>组合2：</label>
+                    <input type="text" name="combo-2" id="text" required pattern="^.{6,12}$" info="6-12位字母数字符号" empty="2 must not be empty" invalid="pattern2 not match"/>
+                </div>
+                -
+                <div class="subfield">
+                    <label for="combo-3">组合3：</label>
+                    <input type="text" name="combo-3" id="text" pattern="^\w{0,2}$" info="2位字母数字下划线" empty="3 must not be empty" invalid="pattern3 not match"/>
+                </div>
+                <div class="field-msg"></div>
+            </div>
+        </form>
+        <script src="js/index.js"></script>
+    </body>
+</html>
