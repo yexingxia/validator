@@ -1,13 +1,19 @@
+/**
+ * @require common:widget/ui/validator/validator.less
+ */
+
+var $ = $ || require('common:widget/ui/jquery/jquery.js');
+
 var Validator = function(form, options) {
     var self = this;
+    self.eventCenter = $(self);
     self.$form = $(form);
     self.options = $.extend({
         groupClass: 'field-group',
-        validEvent: 'blur.validator change.validator',
+        validEvent: 'blur.validator change.validator',//input.validator propertychange.validator',
         tipEvent: 'focus.validator',
         errorClass: 'field-error',
-        msgClass: 'field-msg',
-        eventCenter: window
+        msgClass: 'field-msg'
     }, options);
     self.$groups = $(self.options.groupClass, self.$form);
     self.selector = 'input:not([novalidate]), select:not([novalidate]), textarea:not([novalidate])';
@@ -27,7 +33,7 @@ Validator.prototype = {
             self.notify(target, 'info', target.attr('info'));
         });
     },
-    gatherOpt: function(target) {
+    gatherOpt: function(target, extra) {
         var self = this;
         var opt = {};
         opt.target = target;
@@ -55,25 +61,39 @@ Validator.prototype = {
                 err: target.attr('cmsg')
             };
         }
-        target.data(opt);
+        target.data($.extend(opt, extra));
         return opt;
+    },
+    throwException: function(target, type, action, value) {
+        this.eventCenter.trigger('error.validator', [{
+            mod: target.parents('[log-mod]').attr('log-mod'),
+            position: target.attr('name'),
+            action: action,
+            type: type,
+            value: value
+        }]);
     },
     validate: function(target, options) {
         var self = this;
         var valid = true;
         var def;
+        var action = options.action || 'blur';
         $.each(options.rules, function(k, v) {
             var value = $.trim(target.val());
             if(k === 'custom'){
                 def = $.Deferred();
-                $(self.options.eventCenter).trigger(v.pattern, [{'def': def, 'target': target}]);
+                self.eventCenter.trigger(v.pattern, [{'def': def, 'target': target}]);
                 def.fail(function () {
                     self.notify(target, k, v.err);
+                    self.throwException(target, k, action, value);
                 });
             }else if(!new RegExp(v.pattern).test(value)){
-                self.notify(target, k, v.err);
-                valid = false;
-                return false;
+                if(value.length || k !== 'invalid') {
+                    self.notify(target, k, v.err);
+                    self.throwException(target, k, action, value);
+                    valid = false;
+                    return false;
+                }
             }
         });
         function test() {
@@ -83,8 +103,10 @@ Validator.prototype = {
                     $.each(options.brothers, function(k, v) {
                         var $v = $(v);
                         var state = $v.data('state');
+                        var value = $.trim($v.val());
                         if(state === 'empty' || state === 'invalid'){
                             self.notify($v, state, $v.data('rules')[state].err);
+                            self.throwException($v, state, action, value);
                             hasBadBrothers = true;
                             return false;
                         }
@@ -102,22 +124,50 @@ Validator.prototype = {
             test();
         }
     },
+    validateAll: function (fieldContainer) {
+        var self = this;
+        var result = true;
+        if(fieldContainer && fieldContainer.length) {
+
+        }else{
+            fieldContainer = self.$form;
+        }
+        $(self.selector, fieldContainer).each(function (k, v) {
+            var target = $(v);
+            self.validate(target, self.gatherOpt(target, {action: 'submit'}));
+            if(target.data('state') !== 'pass') {
+                result = false;
+                target[0].scrollIntoView(false);
+                return false;
+            }
+        });
+        return result;
+    },
     notify: function(target, type, content) {
         var self = this;
+        var group = target.parents('.' + self.options.groupClass);
         switch(type) {
             case 'empty':
             case 'invalid':
             case 'custom':
                 target.removeClass(self.options.passClass + ' ' + self.options.infoClass).addClass(self.options.errorClass);
+                group.addClass(self.options.groupClass + '-error');
                 break;
             case 'pass':
                 target.removeClass(self.options.errorClass + ' ' + self.options.infoClass).addClass(self.options.passClass);
+                group.removeClass(self.options.groupClass + '-error');
                 break;
             case 'info':
                 target.removeClass(self.options.errorClass + ' ' + self.options.passClass).addClass(self.options.infoClass);
+                group.removeClass(self.options.groupClass + '-error');
                 break;
         }
-        target.data('state', type);
-        target.parents('.' + self.options.groupClass).find('.' + self.options.msgClass).html(content || '');
+        if(type !== 'info') {
+            target.data('state', type);
+            // console.log(target[0].name + ': ' + target.data('state'));
+        }
+        group.find('.' + self.options.msgClass).html(content || '');
     }
 };
+
+module.exports = Validator;

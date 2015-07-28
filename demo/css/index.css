@@ -16,6 +16,9 @@
 .subfield {
     display: inline-block;
 }
+.field-group-error .field-msg {
+    color: #f00;
+}
 label {
     width: 100px;
     display: inline-block;

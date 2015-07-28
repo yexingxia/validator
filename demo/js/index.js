@@ -24,15 +24,18 @@ function init() {
     //         }
     //     }
     // });
-    $(window).on('same.pwd1', function(e, data) {
+    _validator.eventCenter.on('same.pwd1', function(e, data) {
         var pwd2 = $.trim(data.target.val());
         var pwd1 = $.trim($('#pwd1').val());
         var def = data.def;
-        if(pwd1 !== pwd2) {
-            def.reject();
-        }else{
-            def.resolve();
-        }
+        setTimeout(function(){
+            if(pwd1 !== pwd2) {
+                def.reject();
+            }else{
+                def.resolve(true);
+            }
+        }, 3000);
+
     }).on('repeat.name', function(e, data) {
         var def = data.def;
         $.ajax({
@@ -48,6 +51,17 @@ function init() {
         }).fail(function () {
             def.resolve();
         });
+    }).on('error.validator', function(e, data) {
+        console.log(data);
+    });
+
+    _form.on('click', '#submitBtn', function() {
+        if(_validator.validateAll()) {
+            alert('pass');
+        }else{
+            alert('fail');
+            return false;
+        }
     });
 }
 
