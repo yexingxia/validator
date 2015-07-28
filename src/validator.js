@@ -10,13 +10,16 @@ var Validator = function(form, options) {
     self.$form = $(form);
     self.options = $.extend({
         groupClass: 'field-group',
-        validEvent: 'blur.validator change.validator',//input.validator propertychange.validator',
+        blurValidEvent: 'blur.validator change.validator',
+        changeValidEvent: 'input.validator propertychange.validator',
         tipEvent: 'focus.validator',
         errorClass: 'field-error',
         msgClass: 'field-msg'
     }, options);
     self.$groups = $(self.options.groupClass, self.$form);
-    self.selector = 'input:not([novalidate]), select:not([novalidate]), textarea:not([novalidate])';
+    self.blurSelector = 'input:not([novalidate]), textarea:not([novalidate])';
+    self.changeSelector = 'select:not([novalidate])';
+    self.selector = self.blurSelector + ' ' + self.changeSelector;
     self.$fields = $(self.selector, self.$form);
     self.init();
 };
@@ -24,7 +27,11 @@ Validator.prototype = {
     constructor: Validator,
     init: function() {
         var self = this;
-        self.$form.on(self.options.validEvent, self.selector, function() {
+        self.$form.on(self.options.blurValidEvent, self.blurSelector, function() {
+            var target = $(this);
+            self.validate(target, self.gatherOpt(target));
+        })
+        .on(self.options.changeValidEvent, self.changeSelector, function() {
             var target = $(this);
             self.validate(target, self.gatherOpt(target));
         })
@@ -66,11 +73,14 @@ Validator.prototype = {
     },
     throwException: function(target, type, action, value) {
         this.eventCenter.trigger('error.validator', [{
-            mod: target.parents('[log-mod]').attr('log-mod'),
-            position: target.attr('name'),
-            action: action,
-            type: type,
-            value: value
+            target: target,
+            log: {
+                mod: target.parents('[log-mod]').attr('log-mod'),
+                position: target.attr('name'),
+                action: action,
+                type: type,
+                value: value
+            }
         }]);
     },
     validate: function(target, options) {
