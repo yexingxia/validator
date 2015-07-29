@@ -10,16 +10,18 @@ var Validator = function(form, options) {
     self.$form = $(form);
     self.options = $.extend({
         groupClass: 'field-group',
-        blurValidEvent: 'blur.validator change.validator',
-        changeValidEvent: 'input.validator propertychange.validator',
+        normalValidEvent: 'blur.validator change.validator validator-force', // 普通控件触发事件
+        instantValidEvent: 'input.validator propertychange.validator', // 输入时立即触发事件
         tipEvent: 'focus.validator',
         errorClass: 'field-error',
         msgClass: 'field-msg'
     }, options);
     self.$groups = $(self.options.groupClass, self.$form);
-    self.blurSelector = 'input:not([novalidate]), textarea:not([novalidate])';
-    self.changeSelector = 'select:not([novalidate])';
-    self.selector = self.blurSelector + ' ' + self.changeSelector;
+    self.inputSelector = 'input:not([novalidate])';
+    self.textareaSelector = 'textarea:not([novalidate])';
+    self.selectSelector = 'select:not([novalidate])';
+    self.specialSelector = '[validate]';
+    self.selector = self.inputSelector + ',' + self.textareaSelector + ',' + self.selectSelector;
     self.$fields = $(self.selector, self.$form);
     self.init();
 };
@@ -27,11 +29,7 @@ Validator.prototype = {
     constructor: Validator,
     init: function() {
         var self = this;
-        self.$form.on(self.options.blurValidEvent, self.blurSelector, function() {
-            var target = $(this);
-            self.validate(target, self.gatherOpt(target));
-        })
-        .on(self.options.changeValidEvent, self.changeSelector, function() {
+        self.$form.on(self.options.normalValidEvent, self.selector, function() {
             var target = $(this);
             self.validate(target, self.gatherOpt(target));
         })
@@ -72,7 +70,7 @@ Validator.prototype = {
         return opt;
     },
     throwException: function(target, type, action, value) {
-        this.eventCenter.trigger('error.validator', [{
+        this.eventCenter.trigger('validator-error', [{
             target: target,
             log: {
                 mod: target.parents('[log-mod]').attr('log-mod'),

@@ -51,7 +51,7 @@ function init() {
         }).fail(function () {
             def.resolve();
         });
-    }).on('error.validator', function(e, data) {
+    }).on('validator-error', function(e, data) {
         console.log(data);
     });
 
@@ -62,6 +62,13 @@ function init() {
             alert('fail');
             return false;
         }
+    });
+    document.getElementById('aaa').oninput = function() {
+        $('select').val(this.value);
+        $('select').trigger('validator-force');
+    };
+    $('select').on('validator-force', function() {
+        console.log(1);
     });
 }
 
