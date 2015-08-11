@@ -12,7 +12,7 @@ var Validator = function(form, options) {
         groupClass: 'field-group',
         normalValidEvent: 'blur.validator change.validator validator-force', // 普通控件触发事件
         instantValidEvent: 'input.validator propertychange.validator', // 输入时立即触发事件
-        tipEvent: 'focus.validator',
+        tipEvent: 'click.validator',
         errorClass: 'field-error',
         msgClass: 'field-msg'
     }, options);
@@ -42,7 +42,7 @@ Validator.prototype = {
         var self = this;
         var opt = {};
         opt.target = target;
-        opt.state = '';
+        opt.state = target.data('state') || '';
         opt.brothers = target.parents('.' + self.options.groupClass).find(self.selector);
         var brotherIndex = opt.brothers.index(target);
         opt.brothers.splice(brotherIndex, 1);
@@ -106,22 +106,23 @@ Validator.prototype = {
         });
         function test() {
             if(valid){
+                self.notify(target, 'pass');
+
                 if(options.brothers.length) {
-                    var hasBadBrothers;
+                    // var hasBadBrothers;
                     $.each(options.brothers, function(k, v) {
                         var $v = $(v);
                         var state = $v.data('state');
                         var value = $.trim($v.val());
-                        if(state === 'empty' || state === 'invalid'){
+                        if(state === 'empty' || state === 'invalid') {
                             self.notify($v, state, $v.data('rules')[state].err);
                             self.throwException($v, state, action, value);
-                            hasBadBrothers = true;
+                            // hasBadBrothers = true;
                             return false;
                         }
                     });
-                    if(hasBadBrothers) return false;
+                    // if(hasBadBrothers) return false;
                 }
-                self.notify(target, 'pass');
             }
         }
         if(def){
@@ -132,7 +133,7 @@ Validator.prototype = {
             test();
         }
     },
-    validateAll: function (fieldContainer) {
+    validateUntilError: function (fieldContainer) {
         var self = this;
         var result = true;
         if(fieldContainer && fieldContainer.length) {
@@ -145,8 +146,28 @@ Validator.prototype = {
             self.validate(target, self.gatherOpt(target, {action: 'submit'}));
             if(target.data('state') !== 'pass') {
                 result = false;
-                target[0].scrollIntoView(false);
+                target.parents('.' + self.options.groupClass)[0].scrollIntoView(false);
+                target.focus();
                 return false;
+            }
+        });
+        return result;
+    },
+    validateAll: function (fieldContainer) {
+        var self = this;
+        var result = true;
+        if(fieldContainer && fieldContainer.length) {
+
+        }else{
+            fieldContainer = self.$form;
+        }
+        $(self.selector, fieldContainer).each(function (k, v) {
+            var target = $(v);
+            self.validate(target, self.gatherOpt(target, {action: 'submit'}));
+            if(target.data('state') !== 'pass' && result) {
+                result = false;
+                target.parents('.' + self.options.groupClass)[0].scrollIntoView(false);
+                target.focus();
             }
         });
         return result;

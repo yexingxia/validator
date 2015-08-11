@@ -2,7 +2,9 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
         <link rel="stylesheet" type="text/css" href="css/index.css"/>
+        <link rel="stylesheet" type="text/css" href="js/datetimepicker/datetimepicker.css"/>
         <script>
             var module = {};
             var require = function() {};
@@ -36,7 +38,7 @@
             </div>
             <div class="field-group">
                 <label for="company-name"><i class="red">*</i>自定义验证：</label>
-                <input type="text" name="company-name" id="custom" required pattern="^[\w]+$" info="非空字母数字下划线" empty="must not be empty" invalid="pattern not match" custom="repeat.name" cmsg="this name has already been used"/>
+                <input type="text" name="company-name" id="custom" required pattern="^[\w]+$" info="非空字母数字下划线" empty="must not be empty" invalid="pattern not match" custom="repeat.name" cmsg="this name has already been used" novalidate/>
                 <div class="field-msg"></div>
             </div>
             <div class="field-group">
@@ -68,9 +70,16 @@
                 <div class="field-msg"></div>
             </div>
             <div class="field-group">
+                <label for="datepicker">特殊控件：</label>
+                <input type="text" name="datepicker" id="datepicker" required pattern="^\d{4}-\d{2}-\d{2}$" info="四位年份-两位月份-两位日期" empty="must not be empty" invalid="pattern not match" />
+                <div class="field-msg"></div>
+            </div>
+            <div class="field-group">
                 <button id="submitBtn">submit</button>
             </div>
         </form>
+        <script src="js/datetimepicker/datetimepicker.js"></script>
+        <script src="js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
         <script src="js/index.js"></script>
     </body>
 </html>

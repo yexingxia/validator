@@ -1,8 +1,9 @@
 
 function init() {
-    var _form = $("form");
-    var _fields = $(".autovalid", _form);
+    var _form = $('form');
+    var _fields = $('.autovalid', _form);
     var _validator = new Validator(_form);
+    var _datepicker = $('#datepicker');
     // $.each(_fields, function(k, v) {
     //     var $v = $(v);
     //     var value = $.trim($v.val());
@@ -28,20 +29,20 @@ function init() {
         var pwd2 = $.trim(data.target.val());
         var pwd1 = $.trim($('#pwd1').val());
         var def = data.def;
-        setTimeout(function(){
+        // setTimeout(function(){
             if(pwd1 !== pwd2) {
                 def.reject();
             }else{
                 def.resolve(true);
             }
-        }, 3000);
+        // }, 3000);
 
     }).on('repeat.name', function(e, data) {
         var def = data.def;
         $.ajax({
-            url: "/account/user/check?key=account_company_name",
+            url: '/account/user/check?key=account_company_name',
             data: {value: $.trim(data.target.val())},
-            dataType: "json"
+            dataType: 'json'
         }).done(function (data) {
             if (data && data.ret != 0) {
                 def.reject();
@@ -69,6 +70,13 @@ function init() {
     };
     $('select').on('validator-force', function() {
         console.log(1);
+    });
+    _datepicker.datetimepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true,
+        language: 'zh-CN',
+        todayHighlight: true,
+        minView: 'month'
     });
 }
 

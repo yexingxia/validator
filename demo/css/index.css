@@ -4,6 +4,7 @@
 }
 .field-group * {
     vertical-align: middle;
+    font-size: 14px;
 }
 .field-msg {
     font-size: 12px;
@@ -31,4 +32,7 @@ label {
     font-family: arial;
     padding: 0 5px;
     vertical-align: middle;
+}
+#submitBtn {
+    margin-top: 500px;
 }
