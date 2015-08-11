@@ -66,7 +66,7 @@ function init() {
     });
     var _input = $('#aaa');
     var _select = $('#bbb');
-    var dataArr = ['', 'a1', 'a2', 'a3'];
+    var dataArr = ['a1', 'a2', 'a3'];
     _select.on('change', function() {
         _input.val(_select.val());
     });
@@ -77,7 +77,7 @@ function init() {
         source: dataArr,
         change: function(event, ui) {
             if(!ui.item) {
-                _input.val('');
+                _input.val(_select.val());
                 console.log('not in the list');
             }
         },
