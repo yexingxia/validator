@@ -4,7 +4,10 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" type="text/css" href="css/bootstrap.css"/>
         <link rel="stylesheet" type="text/css" href="css/index.css"/>
-        <link rel="stylesheet" type="text/css" href="js/datetimepicker/datetimepicker.css"/>
+        <link rel="stylesheet" type="text/css" href="plugin/datetimepicker/datetimepicker.css"/>
+        <link rel="stylesheet" type="text/css" href="plugin/autocomplete/jqueryui.css"/>
+        <link rel="stylesheet" type="text/css" href="plugin/autocomplete/autocomplete.css"/>
+        <link rel="stylesheet" type="text/css" href="plugin/autocomplete/menu/menu.css"/>
         <script>
             var module = {};
             var require = function() {};
@@ -38,16 +41,16 @@
             </div>
             <div class="field-group">
                 <label for="company-name"><i class="red">*</i>自定义验证：</label>
-                <input type="text" name="company-name" id="custom" required pattern="^[\w]+$" info="非空字母数字下划线" empty="must not be empty" invalid="pattern not match" custom="repeat.name" cmsg="this name has already been used" novalidate/>
+                <input type="text" name="company-name" id="custom" required pattern="^[\w]+$" info="非空字母数字下划线" empty="must not be empty" invalid="pattern not match" custom="repeat.name" cmsg="this name has already been used"/>
                 <div class="field-msg"></div>
             </div>
             <div class="field-group">
                 <label for="dropdown"><i class="red">*</i>下拉列表：</label>
                 <select name="dropdown" required empty="must not be empty" id="bbb">
                     <option selected></option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
+                    <option>a1</option>
+                    <option>a2</option>
+                    <option>a3</option>
                 </select>
                 <input type="text" id="aaa"/>
                 <div class="field-msg"></div>
@@ -60,12 +63,17 @@
                 -
                 <div class="subfield">
                     <label for="combo-2"><i class="red">*</i>组合2：</label>
-                    <input type="text" name="combo-2" id="combo-2" required pattern="^.{6,12}$" info="6-12位字母数字符号" empty="2 must not be empty" invalid="pattern2 not match"/>
+                    <input type="text" name="combo-2" id="combo-2" required pattern="^.{2,6}$" info="2-6位字母数字符号" empty="2 must not be empty" invalid="pattern2 not match"/>
                 </div>
                 -
                 <div class="subfield">
-                    <label for="combo-3">组合3：</label>
-                    <input type="text" name="combo-3" id="combo-3" pattern="^\w{2}$" info="2位字母数字下划线" empty="3 must not be empty" invalid="pattern3 not match"/>
+                    <label for="combo-3"><i class="red">*</i>组合3：</label>
+                    <input type="text" name="combo-3" id="combo-3" pattern="^\w{2}$" info="2位字母数字下划线" required empty="3 must not be empty" invalid="pattern3 not match"/>
+                </div>
+                -
+                <div class="subfield">
+                    <label for="combo-4">组合4：</label>
+                    <input type="text" name="combo-4" id="combo-4" pattern="^\w{2}$" info="2位字母数字下划线" required empty="4 must not be empty" invalid="pattern4 not match" novalidate/>
                 </div>
                 <div class="field-msg"></div>
             </div>
@@ -78,8 +86,11 @@
                 <button id="submitBtn">submit</button>
             </div>
         </form>
-        <script src="js/datetimepicker/datetimepicker.js"></script>
-        <script src="js/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+        <script src="plugin/autocomplete/jqueryui.js"></script>
+        <script src="plugin/autocomplete/menu/menu.js"></script>
+        <script src="plugin/autocomplete/autocomplete.js"></script>
+        <script src="plugin/datetimepicker/datetimepicker.js"></script>
+        <script src="plugin/datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
         <script src="js/index.js"></script>
     </body>
 </html>

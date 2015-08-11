@@ -64,10 +64,28 @@ function init() {
             return false;
         }
     });
-    document.getElementById('aaa').oninput = function() {
-        $('select').val(this.value);
-        $('select').trigger('validator-force');
-    };
+    var _input = $('#aaa');
+    var _select = $('#bbb');
+    var dataArr = ['', 'a1', 'a2', 'a3'];
+    _select.on('change', function() {
+        _input.val(_select.val());
+    });
+    _input.on('blur', function() {
+        _select.trigger('validator-force');
+    }).autocomplete({
+        autoFocus: true,
+        source: dataArr,
+        change: function(event, ui) {
+            if(!ui.item) {
+                _input.val('');
+                console.log('not in the list');
+            }
+        },
+        select: function(event, ui) {
+            _select.val(ui.item.value);
+            _select.trigger('validator-force');
+        }
+    });
     $('select').on('validator-force', function() {
         console.log(1);
     });

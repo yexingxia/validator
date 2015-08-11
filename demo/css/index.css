@@ -21,7 +21,7 @@
     color: #f00;
 }
 label {
-    width: 100px;
+    width: 120px;
     display: inline-block;
     font-size: 14px;
     text-align: right;
@@ -35,4 +35,15 @@ label {
 }
 #submitBtn {
     margin-top: 500px;
+}
+#combo-1,
+#combo-2,
+#combo-3,
+#combo-4 {
+    width: 100px;
+}
+.ui-widget-content {
+    border: 1px solid #aaa;
+    background: #fff;
+    color: #222;
 }
