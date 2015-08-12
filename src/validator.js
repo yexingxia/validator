@@ -1,8 +1,7 @@
 /**
  * @require common:widget/ui/validator/validator.less
  */
-
-var $ = jQuery || require('common:widget/ui/jquery/jquery.js');
+var $ = require('common:widget/ui/jquery/jquery.js');
 
 var Validator = function(form, options) {
     var self = this;

@@ -9,18 +9,13 @@
         <link rel="stylesheet" type="text/css" href="plugin/autocomplete/autocomplete.css"/>
         <link rel="stylesheet" type="text/css" href="plugin/autocomplete/menu/menu.css"/>
         <script>
-            var module = {};
-            var require = function() {};
-            var Log = {
-                attr: function() {
-                    return {
-                        modId: 'demo'
-                    };
-                }
+            /* let validator.js get $ */
+            var module = '';
+            var require = function(str) {
+                return jQuery;
             };
         </script>
         <script src="js/jquery.js"></script>
-        <script src="../src/validator.js"></script>
     </head>
     <body>
         <form log-mod="validateTest" novalidate>
@@ -86,6 +81,8 @@
                 <button id="submitBtn">submit</button>
             </div>
         </form>
+
+        <script src="../src/validator.js"></script>
         <script src="plugin/autocomplete/jqueryui.js"></script>
         <script src="plugin/autocomplete/menu/menu.js"></script>
         <script src="plugin/autocomplete/autocomplete.js"></script>
