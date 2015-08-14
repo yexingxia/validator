@@ -1,30 +1,9 @@
 
 function init() {
     var _form = $('form');
-    var _fields = $('.autovalid', _form);
     var _validator = new Validator(_form);
     var _datepicker = $('#datepicker');
-    // $.each(_fields, function(k, v) {
-    //     var $v = $(v);
-    //     var value = $.trim($v.val());
-    //     var opts = {
-    //         required: $.trim($v.attr('required')),
-    //         pattern: $.trim($v.attr('pattern'))
-    //     };
-    //     if(!!opts.required){
-    //         if(!value.length) {
-    //             alert('empty');
-    //             return false;
-    //         }
-    //     }
-    //     if(opts.pattern.length) {
-    //         var reg = new RegExp(opts.pattern);
-    //         if(!reg.test(value)) {
-    //             alert('pattern not match');
-    //             return false;
-    //         }
-    //     }
-    // });
+
     _validator.eventCenter.on('same.pwd1', function(e, data) {
         var pwd2 = $.trim(data.target.val());
         var pwd1 = $.trim($('#pwd1').val());
@@ -39,12 +18,13 @@ function init() {
 
     }).on('repeat.name', function(e, data) {
         var def = data.def;
+        var target = data.target;
         $.ajax({
-            url: '/account/user/check?key=account_company_name',
-            data: {value: $.trim(data.target.val())},
+            url: '../test/async.json',
+            // data: {value: $.trim(data.target.val())},
             dataType: 'json'
         }).done(function (data) {
-            if (data && data.ret != 0) {
+            if (data && data.ret === $.trim(target.val())) {
                 def.reject();
             } else {
                 def.resolve();
