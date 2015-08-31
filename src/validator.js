@@ -20,7 +20,7 @@ var Validator = function(form, options) {
     self.textareaSelector = 'textarea:not([novalidate])';
     self.selectSelector = 'select:not([novalidate])';
     self.specialSelector = '[validate]';
-    self.selector = self.inputSelector + ',' + self.textareaSelector + ',' + self.selectSelector;
+    self.selector = self.inputSelector + ',' + self.textareaSelector + ',' + self.selectSelector + ',' + self.specialSelector;
     self.$fields = $(self.selector, self.$form);
     self.init();
 };
@@ -49,7 +49,7 @@ Validator.prototype = {
 
         if(target.attr('required')){
             opt.rules['empty'] = {
-                pattern: '^.+$',
+                pattern: '^[\\s\\S]+$',
                 err: target.attr('empty')
             };
         }
@@ -73,9 +73,9 @@ Validator.prototype = {
             target: target,
             log: {
                 mod: target.parents('[log-mod]').attr('log-mod'),
-                position: target.attr('name'),
-                action: action,
-                type: type,
+                position: target.attr('name') || target.attr('id'),
+                type: action,
+                sort: type,
                 value: value
             }
         }]);
@@ -171,6 +171,16 @@ Validator.prototype = {
         });
         return result;
     },
+    reset: function($fields) {
+        var self = this;
+
+        // 为初始化后动态生成的表单而加
+        $fields = $fields || self.$fields;
+
+        $.each($fields, function(k, v) {
+            self.notify($(v), 'reset');
+        });
+    },
     notify: function(target, type, content) {
         var self = this;
         var group = target.parents('.' + self.options.groupClass);
@@ -182,6 +192,7 @@ Validator.prototype = {
                 group.addClass(self.options.groupClass + '-error');
                 break;
             case 'pass':
+            case 'reset':
                 target.removeClass(self.options.errorClass + ' ' + self.options.infoClass).addClass(self.options.passClass);
                 group.removeClass(self.options.groupClass + '-error');
                 break;
